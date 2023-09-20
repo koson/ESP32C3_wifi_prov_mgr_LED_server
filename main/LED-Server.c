@@ -24,8 +24,8 @@ static const char *TAG = "WebSocket Server"; // TAG for debug
 int led_state = 0;
 
 #define INDEX_HTML_PATH "/spiffs/index.html"
-char index_html[4096];
-char response_data[4096];
+char index_html[5000];
+char response_data[5000];
 
 void initi_web_page_buffer(void)
 {
