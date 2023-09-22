@@ -86,9 +86,12 @@
     <div class="content">
         <div class="card">
             <h2>ONBOARD LED GPIO2</h2>
-            <p><button id="button" class="button">Toggle LED</button></p>
+            <p> <button id="button1" class="button" onclick="toggle(1)">Toggle LED1</button>
+                <button id="button2" class="button" onclick="toggle(2)">Toggle LED2</button>
+            </p>
             <p class="state">State: <span id="state">%s</span></p>
         </div>
+ 
     </div>
     </div>
     <script>
@@ -125,10 +128,13 @@
             initButton();
         }
         function initButton() {
-            document.getElementById('button').addEventListener('click', toggle);
+           // document.getElementById('button1').addEventListener('click', toggle(1));
+           // document.getElementById('button2').addEventListener('click', toggle(2));
         }
-        function toggle() {
-            websocket.send('toggle');
+        function toggle(id) {
+            //alert('toggle'+id);
+           websocket.send('toggle'+id);
+          
         }
     </script>
 </body>
