@@ -180,6 +180,13 @@ static esp_err_t handle_ws_req(httpd_req_t *req)
         free(buf);
         return trigger_async_send(req->handle, req);
     }
+    if (ws_pkt.type == HTTPD_WS_TYPE_TEXT &&
+        strcmp((char *)ws_pkt.payload, "toggle2") == 0)
+    {
+        free(buf);
+        return trigger_async_send(req->handle, req);
+    }
+
     return ESP_OK;
 }
 
