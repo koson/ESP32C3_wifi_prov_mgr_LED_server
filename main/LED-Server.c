@@ -15,7 +15,7 @@
 #include "driver/gpio.h"
 
 #define LED_PIN1 0
-#define LED_PIN2 1
+#define LED_PIN2 23
 httpd_handle_t server = NULL;
 struct async_resp_arg {
     httpd_handle_t hd;
@@ -92,15 +92,13 @@ static void ws_async_send(void *arg)
     httpd_handle_t hd = resp_arg->hd;
     int fd = resp_arg->fd;
 
-    led_state1 = !led_state1;
+
     gpio_set_level(LED_PIN1, led_state1);
+    gpio_set_level(LED_PIN2, led_state2);
 
-    led_state2 = !led_state2;
-        gpio_set_level(LED_PIN1, led_state1);
-
-    char buff[4];
+    char buff[16];
     memset(buff, 0, sizeof(buff));
-    sprintf(buff, "%d",led_state1);
+    sprintf(buff, "%d, %d",led_state1, led_state2);
 
     memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
     ws_pkt.payload = (uint8_t *)buff;
@@ -178,12 +176,14 @@ static esp_err_t handle_ws_req(httpd_req_t *req)
         strcmp((char *)ws_pkt.payload, "toggle1") == 0)
     {
         free(buf);
+        led_state1 = !led_state1;
         return trigger_async_send(req->handle, req);
     }
     if (ws_pkt.type == HTTPD_WS_TYPE_TEXT &&
         strcmp((char *)ws_pkt.payload, "toggle2") == 0)
     {
         free(buf);
+        led_state2 = !led_state2;
         return trigger_async_send(req->handle, req);
     }
 
