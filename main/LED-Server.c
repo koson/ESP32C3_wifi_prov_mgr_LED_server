@@ -14,14 +14,16 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 
-#define LED_PIN 0
+#define LED_PIN1 0
+#define LED_PIN2 1
 httpd_handle_t server = NULL;
 struct async_resp_arg {
     httpd_handle_t hd;
     int fd;
 };
 static const char *TAG = "WebSocket Server"; // TAG for debug
-int led_state = 0;
+int led_state1 = 0;
+int led_state2 = 0;
 
 #define INDEX_HTML_PATH "/spiffs/index.html"
 char index_html[5000];
@@ -56,14 +58,29 @@ void initi_web_page_buffer(void)
 esp_err_t get_req_handler(httpd_req_t *req)
 {
     int response;
-    if(led_state)
-    {
-        sprintf(response_data, index_html, "ON");
-    }
-    else
-    {
-        sprintf(response_data, index_html, "OFF");
-    }
+    char status1[4]={0};
+    char status2[4]={0};
+    led_state1?strcpy(status1,"ON"):strcpy(status1,"OFF");
+    led_state2?strcpy(status2,"ON"):strcpy(status2,"OFF");
+sprintf(response_data, index_html, status1,status2);
+
+    // if(led_state1 && led_state2)
+    // {
+    //     //sprintf(response_data, index_html, "ON","ON");
+    // }
+    // elseif(led_state1 && )
+    // {
+    //     sprintf(response_data, index_html, "OFF");
+    // }
+
+    //     if(led_state2)
+    // {
+    //     sprintf(response_data, index_html, "2|ON");
+    // }
+    // else
+    // {
+    //     sprintf(response_data, index_html, "2|OFF");
+    // }
     response = httpd_resp_send(req, response_data, HTTPD_RESP_USE_STRLEN);
     return response;
 }
@@ -75,12 +92,15 @@ static void ws_async_send(void *arg)
     httpd_handle_t hd = resp_arg->hd;
     int fd = resp_arg->fd;
 
-    led_state = !led_state;
-    gpio_set_level(LED_PIN, led_state);
+    led_state1 = !led_state1;
+    gpio_set_level(LED_PIN1, led_state1);
+
+    led_state2 = !led_state2;
+        gpio_set_level(LED_PIN1, led_state1);
 
     char buff[4];
     memset(buff, 0, sizeof(buff));
-    sprintf(buff, "%d",led_state);
+    sprintf(buff, "%d",led_state1);
 
     memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
     ws_pkt.payload = (uint8_t *)buff;
@@ -155,7 +175,7 @@ static esp_err_t handle_ws_req(httpd_req_t *req)
     ESP_LOGI(TAG, "frame len is %d", ws_pkt.len);
 
     if (ws_pkt.type == HTTPD_WS_TYPE_TEXT &&
-        strcmp((char *)ws_pkt.payload, "toggle") == 0)
+        strcmp((char *)ws_pkt.payload, "toggle1") == 0)
     {
         free(buf);
         return trigger_async_send(req->handle, req);

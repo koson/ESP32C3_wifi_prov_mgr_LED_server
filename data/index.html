@@ -86,10 +86,11 @@
     <div class="content">
         <div class="card">
             <h2>ONBOARD LED GPIO2</h2>
-            <p> <button id="button1" class="button" onclick="toggle(1)">Toggle LED1</button>
-                <button id="button2" class="button" onclick="toggle(2)">Toggle LED2</button>
+            <p> <button id="button1" class="button" onclick="toggle(1)">Toggle LED1</button></p>
+            <p class="state">State LED1: <span id="state1">%s</span></p>
+            <p> <button id="button2" class="button" onclick="toggle(2)">Toggle LED2</button>
             </p>
-            <p class="state">State: <span id="state">%s</span></p>
+            <p class="state">State LED2: <span id="state2">%s</span></p>
         </div>
  
     </div>
@@ -113,23 +114,38 @@
             setTimeout(initWebSocket, 2000);
         }
         function onMessage(event) {
-            var state;
-            console.log(event.data);
-            if (event.data == "1") {
-                state = "ON";
+            var state1;
+            var state2;
+                console.log(event.data);
+            if (event.data == "1:ON") {
+                state1 = "ON";
             }
-            else {
-                state = "OFF";
+            else if(event.data=="1:OFF") {
+                state1 = "OFF";
             }
-            document.getElementById('state').innerHTML = state;
+            else if(event.data=="2:ON")
+            {
+                state2="ON";
+            }
+            else if(event.data=="2:OFF")
+            {
+                state2="OFF";
+            }
+            else
+            {
+                state1="NA";
+                state2="NA";
+            }
+
+            document.getElementById('state1').innerHTML = state1;
         }
         function onLoad(event) {
             initWebSocket();
             initButton();
         }
         function initButton() {
-           // document.getElementById('button1').addEventListener('click', toggle(1));
-           // document.getElementById('button2').addEventListener('click', toggle(2));
+            document.getElementById('button1').addEventListener('click', toggle(1));
+            document.getElementById('button2').addEventListener('click', toggle(2));
         }
         function toggle(id) {
             //alert('toggle'+id);
