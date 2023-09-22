@@ -92,7 +92,6 @@
             </p>
             <p class="state">State LED2: <span id="state2">%s</span></p>
         </div>
- 
     </div>
     </div>
     <script>
@@ -116,34 +115,32 @@
         function onMessage(event) {
             var state1;
             var state2;
-<<<<<<< Updated upstream
-                console.log(event.data);
-            if (event.data == "1:ON") {
-                state1 = "ON";
-=======
             console.log(event.data);
-            if (event.data == "1") {
-                state = "ON";
->>>>>>> Stashed changes
-            }
-            else if(event.data=="1:OFF") {
+            if (event.data == "0, 0") {
                 state1 = "OFF";
+                state2 = "OFF";
             }
-            else if(event.data=="2:ON")
-            {
-                state2="ON";
+            else if(event.data=="0, 1") {
+                state1 = "OFF";
+                state2 = "ON";
             }
-            else if(event.data=="2:OFF")
+            else if(event.data=="1, 0")
             {
+                state1="ON";
                 state2="OFF";
+            }
+            else if(event.data=="1, 1")
+            {
+                state1="ON";
+                state2="ON";
             }
             else
             {
                 state1="NA";
                 state2="NA";
             }
-
             document.getElementById('state1').innerHTML = state1;
+            document.getElementById('state2').innerHTML = state2;
         }
         function onLoad(event) {
             initWebSocket();
@@ -154,11 +151,8 @@
             document.getElementById('button2').addEventListener('click', toggle(2));
         }
         function toggle(id) {
-            //alert('toggle'+id);
            websocket.send('toggle'+id);
-          
         }
     </script>
 </body>
-
 </html>
