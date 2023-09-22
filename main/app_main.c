@@ -34,7 +34,7 @@
 #include "esp_http_server.h"
 
 // Declarations from led-server.c
-extern int led_state;
+//extern int led_state;
 extern void initi_web_page_buffer(void);
 extern httpd_handle_t setup_websocket_server(void);
 
@@ -247,21 +247,21 @@ void app_main(void)
 #endif
     /* If device is not yet provisioned start provisioning service */
 
-//    gpio_set_direction(GPIO_NUM_21, GPIO_MODE_INPUT);
-//    if(gpio_get_level(GPIO_NUM_21) == 0)
-//    {
-//    	usleep(100000);
-//    	if(gpio_get_level(GPIO_NUM_21) == 0)
-//    	{
-//            ESP_LOGI(TAG, "Button pressed");
-//    		provisioned = false;
-//    	}
-//    	else
-//    	{
-//            ESP_LOGI(TAG, "Button not pressed");
-//    		provisioned = true;
-//    	}
-//    }
+    gpio_set_direction(GPIO_NUM_21, GPIO_MODE_INPUT);
+    if(gpio_get_level(GPIO_NUM_21) == 0)
+    {
+    	usleep(100000);
+    	if(gpio_get_level(GPIO_NUM_21) == 0)
+    	{
+            ESP_LOGI(TAG, "Button pressed");
+    		provisioned = false;
+    	}
+    	else
+    	{
+            ESP_LOGI(TAG, "Button not pressed");
+    		provisioned = true;
+    	}
+    }
 
     if (!provisioned) {
         ESP_LOGI(TAG, "Starting provisioning");
@@ -360,9 +360,10 @@ void app_main(void)
     xEventGroupWaitBits(wifi_event_group, WIFI_CONNECTED_EVENT, false, true, portMAX_DELAY);
 
     gpio_set_direction(GPIO_NUM_0, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_23, GPIO_MODE_OUTPUT);
     /* Start main application now */
 
-    led_state = 0;
+//    led_state = 0;
     ESP_LOGI(TAG, "ESP32 ESP-IDF WebSocket Web Server is running ... ...\n");
     initi_web_page_buffer();
     setup_websocket_server();
