@@ -247,21 +247,21 @@ void app_main(void)
 #endif
     /* If device is not yet provisioned start provisioning service */
 
-    gpio_set_direction(GPIO_NUM_21, GPIO_MODE_INPUT);
-    if(gpio_get_level(GPIO_NUM_21) == 0)
-    {
-    	usleep(100000);
-    	if(gpio_get_level(GPIO_NUM_21) == 0)
-    	{
-            ESP_LOGI(TAG, "Button pressed");
-    		provisioned = false;
-    	}
-    	else
-    	{
-            ESP_LOGI(TAG, "Button not pressed");
-    		provisioned = true;
-    	}
-    }
+//    gpio_set_direction(GPIO_NUM_21, GPIO_MODE_INPUT);
+//    if(gpio_get_level(GPIO_NUM_21) == 0)
+//    {
+//    	usleep(100000);
+//    	if(gpio_get_level(GPIO_NUM_21) == 0)
+//    	{
+//            ESP_LOGI(TAG, "Button pressed");
+//    		provisioned = false;
+//    	}
+//    	else
+//    	{
+//            ESP_LOGI(TAG, "Button not pressed");
+//    		provisioned = true;
+//    	}
+//    }
 
     if (!provisioned) {
         ESP_LOGI(TAG, "Starting provisioning");
